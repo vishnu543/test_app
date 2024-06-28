@@ -114,4 +114,28 @@ router.get('/get-user-data', authenticateJwt, async (req, res) => {
     }
 })
 
+router.delete('/delete', authenticateJwt, async (req, res) => {
+    const { user } = req.user;
+    
+    try {
+        const userDetails = await User.findById(user.id);
+        if(!userDetails) {
+            return res.status(400).json({
+                message: 'Invalid user'
+            })
+        }
+
+        const deleatedDetails = await User.deleteOne({ _id: user.id})
+        console.log(deleatedDetails, 'the deleted details');
+        return  res.json({
+            message: "Successfully deleted your account"
+        })
+    } catch (err) {
+        console.log(err, 'error in deleting the user');
+        return res.status(500).json({
+            message: 'Server Error'
+        })
+    }
+})
+
 module.exports = router;
