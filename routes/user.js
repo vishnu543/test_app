@@ -138,4 +138,29 @@ router.delete('/delete', authenticateJwt, async (req, res) => {
     }
 })
 
+router.put('/update-user-name', authenticateJwt, async (req, res) => {
+    const { user } = req.user;
+    const { updatedName } = req.body;
+
+    try {
+        const userDetails = await User.findById(user.id);
+        if(!userDetails) {
+            return res.status(400).json({
+                message: 'Invalid user'
+            })
+        }
+
+        const updatedDetails = await User.updateOne({ name: updatedName})
+        console.log(updatedDetails, 'the updated details');
+        return  res.json({
+            message: "Successfully updated your name"
+        })
+    } catch (err) {
+        console.log(err, 'error in deleting the user');
+        return res.status(500).json({
+            message: 'Server Error'
+        })
+    }
+})
+
 module.exports = router;
