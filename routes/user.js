@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const authenticateJwt = require('../middlewares/auth');
 
 router.post('/create', async (req, res) => {
     const {username, email, password} = req.body;
@@ -80,6 +81,34 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         console.log(err, 'Error in Login API');
         res.status(500).json({
+            message: 'Server Error'
+        })
+    }
+})
+
+router.get('/get-user-data', authenticateJwt, async (req, res) => {
+    const { user } = req.user;
+
+    try {
+        const userDetails = await User.findById(user.id);
+        if(!userDetails) {
+            return res.status(400).json({
+                message: 'User not found'
+            })
+        }
+
+        return res.json({
+            message: 'Success',
+            userDetails: {
+                name: userDetails.name,
+                email: userDetails.email,
+            }
+        })
+
+
+    } catch (err) {
+        console.log('Error in Get User data API: ', err);
+        return res.status(500).json({
             message: 'Server Error'
         })
     }
