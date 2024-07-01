@@ -150,7 +150,13 @@ router.put('/update-user-name', authenticateJwt, async (req, res) => {
             })
         }
 
-        const updatedDetails = await User.updateOne({ name: updatedName})
+        const updatedDetails = await User.findByIdAndUpdate(
+            userDetails.id,
+            { name: updatedName },
+            { new: true } // Return the updated document
+        );
+
+        // const updatedDetails = await User.updateOne({ name: updatedName})
         console.log(updatedDetails, 'the updated details');
         return  res.json({
             message: "Successfully updated your name"
