@@ -140,7 +140,7 @@ router.delete('/delete', authenticateJwt, async (req, res) => {
 
 router.put('/update-user-name', authenticateJwt, async (req, res) => {
     const { user } = req.user;
-    const { updatedName } = req.body;
+    const { key, updatedValue } = req.body;
 
     try {
         const userDetails = await User.findById(user.id);
@@ -150,9 +150,19 @@ router.put('/update-user-name', authenticateJwt, async (req, res) => {
             })
         }
 
+        let updatedJson;
+
+        if(key === 'email') {
+            updatedJson = {email: updatedValue};
+        } else if (key === 'name') {
+            updatedJson = {name: updatedValue}
+        }
+ 
+        console.log(updatedJson, 'the updated json');
+
         const updatedDetails = await User.findByIdAndUpdate(
             userDetails.id,
-            { name: updatedName },
+            updatedJson,
             { new: true } // Return the updated document
         );
 
