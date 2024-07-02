@@ -4,6 +4,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authenticateJwt = require('../middlewares/auth');
 
+router.get('/Hello', async (req, res) => {
+    res.send("Welcome page -- Vishnu");
+})
+
+
 router.post('/create', async (req, res) => {
     const {username, email, password} = req.body;
 
