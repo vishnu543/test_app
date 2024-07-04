@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const router = require('express').Router();
+
 
 
 const userRoutes = require('./routes/user');
@@ -19,6 +19,9 @@ mongoose.connect("mongodb+srv://gagan:W7aocAriylB9ysl1@my-app-backend.04hq2bu.mo
     .then(() => console.log('Database has been connected successfully'))
         .catch((err) => console.log('Failed to connect to Database', err))
 
+app.use('/', (req, res) => {
+    res.send("Welcome page -- Vishnu");
+})
 
 console.log('After Mongoose connect');
 app.use('/api/users', userRoutes)
